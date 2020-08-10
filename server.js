@@ -1,26 +1,33 @@
 'use strict';
 
 // Application Dependencies
+require('dotenv').config();
 const express = require('express');
-const superagent = require('superagent');
-const { response } = require('express');
-// const pg = require('pg');
-
+const cors = require('cors');
 
 // Application Setup
 const app = express();
-const PORT = process.env.PORT || 3000;
-require('dotenv').config();
+const PORT = process.env.PORT;
+app.use(cors());
 
 // Application Middleware
 app.use(express.urlencoded({ extended: true }));
-// const client = new pg.Client(process.env.DATABASE_URL);
-// client.on('error', err => console.log(err));
 
-// Set the view engine for server-side templating
-app.set('view engine', 'ejs');
-app.use(express.static('./public'));
+// Route Definitions
+app.get('/', rootHandler);
+app.use('*', notFoundHandler);
+app.use(errorHandler);
 
-// Catch-all
-app.get('*', (request, response) => response.status(404).send('This route does not exist.'));
-app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
+// Route Handlers
+function rootHandler(request, response) {
+  response.status(200).send('COVID Watcher Backend');
+}
+function notFoundHandler(request, response) {
+  response.status(404).json({ notFound: true });
+}
+function errorHandler(error, request, response, next) {
+  response.status(500).json({ error: true, message: error.message });
+}
+
+// App listener
+app.listen(PORT,() => console.log(`Listening on port ${PORT}`));
