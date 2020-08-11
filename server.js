@@ -19,7 +19,7 @@ app.set('view engine', 'ejs');
 app.use(express.static('./public'));
 
 // Route Definitions
-app.get('/', rootHandler);
+app.get('/', getStateData);
 app.get('/states', getStateData);
 app.use('*', notFoundHandler);
 app.use(errorHandler);
@@ -42,8 +42,12 @@ function getStateData(request, response) {
       arrayOfStateData.forEach(state => {
         statesResult.push(new States(state))
       })
-      response.send(statesResult);
-      console.log(statesResult);
+      return statesResult;
+    })
+    .then( results => {
+      console.log(results);
+      let viewModelObject = {states: results};
+      response.render('index', viewModelObject)
     })
     .catch(err => {
       console.log(err);
