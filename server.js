@@ -26,7 +26,8 @@ app.use(errorHandler);
 
 // Route Handlers
 function rootHandler(request, response) {
-  response.render('../views/index');
+  let viewModel = 'Testing '
+  response.render('index', viewModel);
 }
 
 function getStateData(request, response) {
