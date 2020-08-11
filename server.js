@@ -14,6 +14,10 @@ app.use(cors());
 // Application Middleware
 app.use(express.urlencoded({ extended: true }));
 
+// Set the view engine for server-side templating
+app.set('view engine', 'ejs');
+app.use(express.static('./public'));
+
 // Route Definitions
 app.get('/', rootHandler);
 app.get('/states', getStateData);
@@ -22,7 +26,7 @@ app.use(errorHandler);
 
 // Route Handlers
 function rootHandler(request, response) {
-  response.status(200).send('COVID Watcher Backend');
+  response.render('index');
 }
 
 function getStateData(request, response) {
