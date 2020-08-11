@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <h2>Save a state for easy look up</h2>
+      <div id="state-container">
+        <% statesResult.forEach(state => { %>
+        <div class="state-card">
+          <h2><%= state.stateName %></h2>
+          <p><%= state.positive %></p>
+          <p><%= state.negative %></p>
+          <p><%= state.hospitalizedCurrently %></p>
+          <p><%= state.recovered %></p>
+          <p><%= state.death %></p>
+          <p><%= state.totalTest %></p>
+          <p><%= state.positiveTests %></p>
+          <p><%= state.negativeTests %></p>
+          <button type="button" post%=>>View Details</button>
+          <% }) %>
+        </div>
+      </div>
+</body>
+</html>
