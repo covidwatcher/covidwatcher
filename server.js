@@ -26,8 +26,8 @@ app.use(errorHandler);
 
 // Route Handlers
 function rootHandler(request, response) {
-  let viewModel = 'Testing '
-  response.render('index', viewModel);
+  let viewModelObject = {states: [{stateName:'Iowa', positive:'3', negative:'4',hospitalizedCurrently:'1',recovered:'12',death:'10',totalTest:'300',positiveTests:'21',negativeTests:'25'}]};
+  response.render('index', viewModelObject);
 }
 
 function getStateData(request, response) {
