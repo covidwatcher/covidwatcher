@@ -70,9 +70,5 @@ function States(state){
   this.negativeTests = state.negativeTestsViral || 'Data not provided';
 }
 
-function renderHomePage(request, response) {
-  response.render('views/index');
-}
-
 // App listener
 app.listen(PORT,() => console.log(`Listening on port ${PORT}`));
