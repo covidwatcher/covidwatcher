@@ -28,7 +28,22 @@ function rootHandler(request, response) {
 function getStateData(request, response) {
   const url = 'https://api.covidtracking.com/v1/states/current.json';
   superagent.get(url)
-  console.log(response)
+    .query({
+      format: 'json'
+    })
+    .then(stateDataResponse => {
+      const arrayOfStateData = stateDataResponse.body;
+      const statesResult = [];
+      arrayOfStateData.forEach(state => {
+        statesResult.push(new States(state))
+      })
+      response.send(statesResult);
+      console.log(statesResult);
+    })
+    .catch(err => {
+      console.log(err);
+      errorHandler(err, request, response);
+    });
 }
 
 function notFoundHandler(request, response) {
@@ -41,14 +56,14 @@ function errorHandler(error, request, response, next) {
 
 function States(state){
   this.stateName = state.state;
-  this.positive = state.positive;
-  this.negative = state.negative;
-  this.hospitalizedCurrently = state.hospitalizedCurrently;
-  this.recovered = state.recovered;
-  this.death = state.death;
-  this.totalTest = state.totalTestsViral;
-  this.positiveTests = state.positiveTestsViral;
-  this.negativeTests = state.negativeTestsViral;
+  this.positive = state.positive || 'Data not provided';
+  this.negative = state.negative || 'Data not provided';
+  this.hospitalizedCurrently = state.hospitalizedCurrently || 'Data not provided';
+  this.recovered = state.recovered || 'Data not provided';
+  this.death = state.death || 'Data not provided';
+  this.totalTest = state.totalTestsViral || 'Data not provided';
+  this.positiveTests = state.positiveTestsViral || 'Data not provided';
+  this.negativeTests = state.negativeTestsViral || 'Data not provided';
 }
 
 function renderHomePage(request, response) {
