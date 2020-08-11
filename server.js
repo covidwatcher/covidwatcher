@@ -26,7 +26,7 @@ app.use(errorHandler);
 
 // Route Handlers
 function rootHandler(request, response) {
-  response.render('./index');
+  response.render('../views/index');
 }
 
 function getStateData(request, response) {
