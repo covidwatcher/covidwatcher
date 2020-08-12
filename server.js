@@ -30,34 +30,37 @@ app.get('/state', getStateData);
 app.get('/about', (req, res) => {
   res.render('about.ejs');
 });
-
 app.use('*', notFoundHandler);
 app.use(errorHandler);
 
-// Route Handlers
-function rootHandler(request, response) {
-  let viewModelObject = { states: [{ stateName: 'Iowa', positive: '3', negative: '4', hospitalizedCurrently: '1', recovered: '12', death: '10', totalTest: '300', positiveTests: '21', negativeTests: '25' }] };
-  response.render('index', viewModelObject);
-}
+// // Route Handlers
+// function rootHandler(request, response) {
+//   let viewModelObject = { states: [{ stateName: 'Iowa', positive: '3', negative: '4', hospitalizedCurrently: '1', recovered: '12', death: '10', totalTest: '300', positiveTests: '21', negativeTests: '25' }] };
+//   response.render('index', viewModelObject);
+// }
 
 function getStateData(request, response) {
-  const url = 'https://api.covidtracking.com/v1/states/current.json';
+  const state = request.query.state;
+  if(!state){
+    let viewModelObject = {states: []}
+    response.render('state', viewModelObject)
+    return
+  }
+  const url = `https://api.covidtracking.com/v1/states/${state}/current.json`;
   superagent.get(url)
     .query({
       format: 'json'
     })
     .then(stateDataResponse => {
-      const arrayOfStateData = stateDataResponse.body;
+      const state = stateDataResponse.body;
       const statesResult = [];
-      arrayOfStateData.forEach(state => {
-        statesResult.push(new States(state))
-      })
+      statesResult.push(new States(state))
       return statesResult;
     })
     .then(results => {
       console.log(results);
       let viewModelObject = { states: results };
-      response.render('index', viewModelObject)
+      response.render('state', viewModelObject)
 
     })
     .catch(err => {
@@ -86,24 +89,17 @@ function getSavedStates (request, response) {
       }
       response.render('index', viewModelObject);
     })
+    .catch(err => {
+      console.log(err);
+      errorHandler(err, request, response);
+    });
 }
 
-// function stateHandler(request, response) {
-//   const state = request.query.state;
-// }
-// function addState(request, response) {
-//   console.log(response.body)
-//   let {stateName, positive, negative, hospitalizedCurrently, recovered, death, totalTest, positiveTests, negativeTests} = request.body;
-//   const SQL = `
-//   INSERT INTO userstates ("stateName", positive, negative, "hospitalizedCurrently", recovered, death, "totalTest", "positiveTests", "negativeTests")
-//   VALUES ($1, $2,)
-//   `;
-//   const values = [stateName, positive, negative, hospitalizedCurrently, recovered, death, totalTest, positiveTests, negativeTests]
-//   console.log(values);
-// }
+function getOneState() {
+  const url = 'https://api.covidtracking.com/v1/states/`${stateCode}`/current.json'
+}
 
 function States(state){
-
   this.stateName = state.state;
   this.positive = state.positive || 'Data not provided';
   this.negative = state.negative || 'Data not provided';
