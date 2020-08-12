@@ -5,6 +5,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const superagent = require('superagent');
+const pg = require('pg');
 
 // Application Setup
 const app = express();
@@ -18,9 +19,18 @@ app.use(express.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 app.use(express.static('./public'));
 
+// Database Setup
+const client = new pg.Client(process.env.DATABASE_URL);
+client.on('error', err => console.log(err));
+
 // Route Definitions
-app.get('/', getStateData);
-app.get('/states', getStateData);
+app.get('/', getSavedStates);
+// app.get('/state', addState);
+app.get('/state', getStateData);
+app.get('/about', (req, res) => {
+  res.render('about.ejs');
+});
+
 app.use('*', notFoundHandler);
 app.use(errorHandler);
 
@@ -48,6 +58,7 @@ function getStateData(request, response) {
       console.log(results);
       let viewModelObject = { states: results };
       response.render('index', viewModelObject)
+
     })
     .catch(err => {
       console.log(err);
@@ -63,7 +74,36 @@ function errorHandler(error, request, response, next) {
   response.status(500).json({ error: true, message: error.message });
 }
 
-function States(state) {
+function getSavedStates (request, response) {
+  const SQL = `
+  SELECT *
+  FROM userstates
+  `;
+  client.query(SQL)
+    .then(result => {
+      let viewModelObject = {
+        states: result.rows,
+      }
+      response.render('index', viewModelObject);
+    })
+}
+
+// function stateHandler(request, response) {
+//   const state = request.query.state;
+// }
+// function addState(request, response) {
+//   console.log(response.body)
+//   let {stateName, positive, negative, hospitalizedCurrently, recovered, death, totalTest, positiveTests, negativeTests} = request.body;
+//   const SQL = `
+//   INSERT INTO userstates ("stateName", positive, negative, "hospitalizedCurrently", recovered, death, "totalTest", "positiveTests", "negativeTests")
+//   VALUES ($1, $2,)
+//   `;
+//   const values = [stateName, positive, negative, hospitalizedCurrently, recovered, death, totalTest, positiveTests, negativeTests]
+//   console.log(values);
+// }
+
+function States(state){
+
   this.stateName = state.state;
   this.positive = state.positive || 'Data not provided';
   this.negative = state.negative || 'Data not provided';
@@ -76,4 +116,9 @@ function States(state) {
 }
 
 // App listener
-app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+client.connect()
+  .then(() => {
+    app.listen(PORT,() => console.log(`Listening on port ${PORT}`));
+  })
+  .catch(err => {throw err;})
+
