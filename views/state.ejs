@@ -8,9 +8,13 @@
 <body>
   <fieldset>
     <h4>Search by abbreviated state name</h4>
-      <form action="/articals" method="post">
-        <input type="text" name="search" placeholder="Enter a state abbreviation" required>
+      <form action="/state" id="stateCode">
+        <input type="text" name="state" placeholder="Enter a state abbreviation" required>
+        <input type="submit" value="Submit"/><br>
   </fieldset>
+  
+  
+  
   <h2>Save a state for easy look up</h2>
   <div id="state-container">
     <% states.forEach(state => { %>
