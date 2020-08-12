@@ -6,20 +6,21 @@
   <title>Document</title>
 </head>
 <body>
-  <fieldset>
-    <h4>Search by abbreviated state name</h4>
-      <form action="/state" id="stateCode">
-        <input type="text" name="state" placeholder="Enter a state abbreviation" required>
-        <input type="submit" value="Submit"/><br>
+  <form>
+    <fieldset>
+      <h4>Search by abbreviated state name</h4>
+        <form action="/state" id="stateCode">
+          <input type="text" name="state" placeholder="Enter a state abbreviation" required>
+          <input type="submit" value="Submit"/><br>
   </fieldset>
-  
-  
+</form>
   
   <h2>Save a state for easy look up</h2>
   <div id="state-container">
     <% states.forEach(state => { %>
     <div class="state-card">
       <h2><%= state.stateName %></h2>
+      <p><%= state.date %></p>
       <p><%= state.positive %></p>
       <p><%= state.negative %></p>
       <p><%= state.hospitalizedCurrently %></p>
@@ -28,9 +29,21 @@
       <p><%= state.totalTest %></p>
       <p><%= state.positiveTests %></p>
       <p><%= state.negativeTests %></p>
-      <button type="button">View Details</button>
-      <% }) %>
+
     </div>
   </div>
+  <form method="POST" action="/saveState">
+    <input type="hidden" value="<%= state.stateName %>" name="name">
+    <input type="hidden" value="<%= state.positive %>" name="positive">
+    <input type="hidden" value="<%= state.negative %>" name="negative">
+    <input type="hidden" value="<%= state.hospitalizedCurrently %>" name="hospitalized">
+    <input type="hidden" value="<%= state.recovered %>" name="recovered">
+    <input type="hidden" value="<%= state.death %>" name="death">
+    <input type="hidden" value="<%= state.totalTest %>" name="total_test">
+    <input type="hidden" value="<%= state.positiveTests %>" name="positive_test">
+    <input type="hidden" value="<%= state.negativeTests %>" name="negative_test">
+    <button type="submit">Save to fav.</button>
+  </form>
+  <% }) %>
 </body>
 </html>

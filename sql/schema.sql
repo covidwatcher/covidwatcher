@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS userstates (
   id SERIAL PRIMARY KEY,
   "stateName" VARCHAR(50),
+  "updatedTime" VARCHAR(200),
   positive VARCHAR(50),
   negative VARCHAR(50),
   "hospitalizedCurrently" VARCHAR(50),
