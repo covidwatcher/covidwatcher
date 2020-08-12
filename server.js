@@ -35,10 +35,10 @@ app.use('*', notFoundHandler);
 app.use(errorHandler);
 
 // Route Handlers
-// function rootHandler(request, response) {
-//   let viewModelObject = {states: [{stateName:'Iowa', positive:'3', negative:'4',hospitalizedCurrently:'1',recovered:'12',death:'10',totalTest:'300',positiveTests:'21',negativeTests:'25'}]};
-//   response.render('index', viewModelObject);
-// }
+function rootHandler(request, response) {
+  let viewModelObject = { states: [{ stateName: 'Iowa', positive: '3', negative: '4', hospitalizedCurrently: '1', recovered: '12', death: '10', totalTest: '300', positiveTests: '21', negativeTests: '25' }] };
+  response.render('index', viewModelObject);
+}
 
 function getStateData(request, response) {
   const url = 'https://api.covidtracking.com/v1/states/current.json';
@@ -54,10 +54,11 @@ function getStateData(request, response) {
       })
       return statesResult;
     })
-    .then( results => {
+    .then(results => {
       console.log(results);
-      let viewModelObject = {states: results};
-      response.render('state', viewModelObject)
+      let viewModelObject = { states: results };
+      response.render('index', viewModelObject)
+
     })
     .catch(err => {
       console.log(err);
@@ -102,6 +103,7 @@ function getSavedStates (request, response) {
 // }
 
 function States(state){
+
   this.stateName = state.state;
   this.positive = state.positive || 'Data not provided';
   this.negative = state.negative || 'Data not provided';
@@ -119,3 +121,4 @@ client.connect()
     app.listen(PORT,() => console.log(`Listening on port ${PORT}`));
   })
   .catch(err => {throw err;})
+
