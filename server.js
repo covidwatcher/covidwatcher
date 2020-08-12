@@ -25,19 +25,14 @@ client.on('error', err => console.log(err));
 
 // Route Definitions
 app.get('/', getSavedStates);
-// app.get('/state', addState);
 app.get('/state', getStateData);
 app.get('/about', (req, res) => {
   res.render('about.ejs');
 });
+app.post('/saveState', saveStateData);
 app.use('*', notFoundHandler);
 app.use(errorHandler);
 
-// // Route Handlers
-// function rootHandler(request, response) {
-//   let viewModelObject = { states: [{ stateName: 'Iowa', positive: '3', negative: '4', hospitalizedCurrently: '1', recovered: '12', death: '10', totalTest: '300', positiveTests: '21', negativeTests: '25' }] };
-//   response.render('index', viewModelObject);
-// }
 
 function getStateData(request, response) {
   const state = request.query.state;
@@ -95,11 +90,23 @@ function getSavedStates (request, response) {
     });
 }
 
-function getOneState() {
-  const url = 'https://api.covidtracking.com/v1/states/`${stateCode}`/current.json'
+function saveStateData(request, response) {
+  const SQL = `
+  INSERT INTO userstates ("stateName", positive, negative, "hospitalizedCurrently", recovered, death, "totalTest", "positiveTests", "negativeTests")
+  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+  `;
+  let { name, positive, negative, hospitalized, recovered, death, total_test, positive_test, negative_test } = request.body
+  let values = [ name, positive, negative, hospitalized, recovered, death, total_test, positive_test, negative_test ];
+  client.query(SQL, values)
+    .then(response.redirect('/state'))
+    .catch(err => {
+      console.log(err);
+      errorHandler(err, request, response);
+    });
 }
 
 function States(state){
+  this.date = new Date()
   this.stateName = state.state;
   this.positive = state.positive || 'Data not provided';
   this.negative = state.negative || 'Data not provided';
