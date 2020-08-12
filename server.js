@@ -26,7 +26,11 @@ client.on('error', err => console.log(err));
 // Route Definitions
 app.get('/', getSavedStates);
 // app.get('/state', addState);
-app.get('/states', getStateData);
+app.get('/state', getStateData);
+app.get('/about', (req, res) => {
+  res.render('about.ejs');
+});
+
 app.use('*', notFoundHandler);
 app.use(errorHandler);
 
