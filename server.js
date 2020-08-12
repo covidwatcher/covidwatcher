@@ -20,7 +20,10 @@ app.use(express.static('./public'));
 
 // Route Definitions
 app.get('/', getStateData);
-app.get('/states', getStateData);
+app.get('/state', getStateData);
+app.get('/about', (req, res) => {
+  res.render('about.ejs');
+});
 app.use('*', notFoundHandler);
 app.use(errorHandler);
 
