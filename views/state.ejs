@@ -11,20 +11,21 @@
     <link href="https://fonts.googleapis.com/css2?family=Recursive&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@700&display=swap" rel="stylesheet">
 </head>
+
 <body>
   <%- include('./header') %>
   <form>
     <fieldset>
       <h4>Search by abbreviated state name</h4>
-        <form action="/state" id="stateCode">
-          <input type="text" name="state" placeholder="Enter a state abbreviation" required>
-          <input type="submit" value="Submit"/><br>
-  </fieldset>
-</form>
-  
+      <form action="/state" id="stateCode">
+        <input type="text" name="state" placeholder="Enter a state abbreviation" required>
+        <input type="submit" value="Submit" /><br>
+    </fieldset>
+  </form>
   <h2>Save a state for easy look up</h2>
   
   <%- include('./state-card-button') %>
 
 </body>
+
 </html>

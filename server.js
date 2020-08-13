@@ -41,8 +41,8 @@ app.use(errorHandler);
 
 function getStateData(request, response) {
   const state = request.query.state;
-  if(!state){
-    let viewModelObject = {states: []}
+  if (!state) {
+    let viewModelObject = { states: [] }
     response.render('state', viewModelObject)
     return
   }
@@ -77,15 +77,37 @@ function errorHandler(error, request, response, next) {
   response.status(500).json({ error: true, message: error.message });
 }
 
-function getSavedStates (request, response) {
+function getSavedStates(request, response) {
   const SQL = `
   SELECT *
   FROM userstates
   `;
   client.query(SQL)
     .then(result => {
+      return Promise.all(result.rows.map(row => {
+        let timeOnRow = new Date(Date.parse(row.updatedTime));
+
+        let hourAgo = new Date(Date.now() - 60 * 1000 * 30);
+
+        if (timeOnRow > hourAgo) {
+          return row
+        }
+        console.log("Row is out of date: ", row)
+        let state = row.stateName;
+        const url = `https://api.covidtracking.com/v1/states/${state}/current.json`;
+        return superagent.get(url)
+          .then(response => new States(response.body))
+          // .then(state => {
+          //   const SQL = ``;
+          //   return client.query()
+          //     .then(() => state)
+          // })
+      }))
+    })
+    .then(states => {
+      console.log(states);
       let viewModelObject = {
-        states: result.rows,
+        states,
       }
       response.render('index', viewModelObject);
     })
@@ -94,14 +116,28 @@ function getSavedStates (request, response) {
       errorHandler(err, request, response);
     });
 }
+// client.query(`SELECT * FROM userstates WHERE name = $1`, [params.state])
+//   .then(result => {
+//     {
+//       return result.rows[0]; 
+//     }
+//   })
+// const state = request.query.state;
+// return superagent.get(`https://api.covidtracking.com/v1/states/${state}/current.json`)
+//   .then(data => {
+//     let { name, positive, negative, hospitalized, recovered, death, total_test, positive_test, negative_test } = request.body
+//     let values = [name, positive, negative, hospitalized, recovered, death, total_test, positive_test, negative_test];
+//     return client.query('INSERT INTO userstates', values);
+//   })
+
 
 function saveStateData(request, response) {
   const SQL = `
-  INSERT INTO userstates ("stateName", positive, negative, "hospitalizedCurrently", recovered, death, "totalTest", "positiveTests", "negativeTests")
-  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+  INSERT INTO userstates ("stateName", "updatedTime", positive, negative, "hospitalizedCurrently", recovered, death, "totalTest", "positiveTests", "negativeTests")
+  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
   `;
-  let { name, positive, negative, hospitalized, recovered, death, total_test, positive_test, negative_test } = request.body
-  let values = [ name, positive, negative, hospitalized, recovered, death, total_test, positive_test, negative_test ];
+  let { name, date, positive, negative, hospitalized, recovered, death, total_test, positive_test, negative_test } = request.body
+  let values = [name, date, positive, negative, hospitalized, recovered, death, total_test, positive_test, negative_test];
   client.query(SQL, values)
     .then(response.redirect('/state'))
     .catch(err => {
@@ -110,8 +146,8 @@ function saveStateData(request, response) {
     });
 }
 
-function States(state){
-  this.date = new Date()
+function States(state) {
+  this.date = new Date();
   this.stateName = state.state;
   this.positive = state.positive || 'Data not provided';
   this.negative = state.negative || 'Data not provided';
@@ -126,7 +162,6 @@ function States(state){
 // App listener
 client.connect()
   .then(() => {
-    app.listen(PORT,() => console.log(`Listening on port ${PORT}`));
+    app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
   })
-  .catch(err => {throw err;})
-
+  .catch(err => { throw err; })
