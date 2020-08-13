@@ -1,0 +1,86 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: rgba(128, 128, 128, 0.349);
+}
+
+a:visited {
+    color: rgb(205, 175, 92);
+}
+
+a {
+    color: rgb(25, 157, 167);
+}
+
+h1 {
+    text-align: center;
+    font-size: 38px;
+    font-family: 'Crimson Text', serif;
+    margin: 5px;
+    padding-top: 10px;
+}
+
+ul {
+    margin: 5px;
+    text-align: center;
+}
+
+li {
+    display: inline;
+    padding: 10px;
+}
+
+header {
+    /* background-color: rgb(16, 93, 170); */
+    color: #F4A261;
+    padding: 5px;
+    background-image: url(../images/virus_head.png);
+    background-size: 100% 100%;
+}
+
+.welcome {
+    border: 1px solid black;
+    padding: 5px;
+    margin: 10px;
+    border-radius: 3% 3% 3% 3%;
+    box-shadow: 3px 3px 5px rgb(102, 56, 26);
+    background-color: whitesmoke;
+    font-family: 'Recursive', sans-serif;
+}
+
+.topic {
+    text-align: center;
+    font-size: 22px;
+    margin: 5px;
+}
+
+#state-container {
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+
+.state-card:nth-of-type(odd) {
+    grid-column: 1;
+}
+
+.state-card:nth-of-type(even) {
+    grid-column: 2;
+}
+
+.state-card {
+    border: 1px solid black;
+    border-radius: 3% 3% 3% 3%;
+    margin: 3px;
+    background-color: honeydew;
+}
+
+div > h2 {
+    font-weight: bolder;
+    padding: 3px;
+}
+
+p {
+    padding: 2px;
+}
