@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <link rel="stylesheet" href="./CSS/styles.css">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>State Search</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="./CSS/styles.css">
+    <link rel="icon" href="images/virus-favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Recursive&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@700&display=swap" rel="stylesheet">
 </head>
 
 <body>
+  <%- include('./header') %>
   <form>
     <fieldset>
       <h4>Search by abbreviated state name</h4>
@@ -18,35 +23,9 @@
     </fieldset>
   </form>
   <h2>Save a state for easy look up</h2>
-  <div id="state-container">
-    <% states.forEach(state => { %>
-    <div class="state-card">
-      <h2><%= state.stateName %></h2>
-      <p><%= state.date %></p>
-      <p><%= state.positive %></p>
-      <p><%= state.negative %></p>
-      <p><%= state.hospitalizedCurrently %></p>
-      <p><%= state.recovered %></p>
-      <p><%= state.death %></p>
-      <p><%= state.totalTest %></p>
-      <p><%= state.positiveTests %></p>
-      <p><%= state.negativeTests %></p>
-    </div>
-  </div>
-  <form method="POST" action="/saveState">
-    <input type="hidden" value="<%= state.stateName %>" name="name">
-    <input type="hidden" value="<%= state.date %>" name="date">
-    <input type="hidden" value="<%= state.positive %>" name="positive">
-    <input type="hidden" value="<%= state.negative %>" name="negative">
-    <input type="hidden" value="<%= state.hospitalizedCurrently %>" name="hospitalized">
-    <input type="hidden" value="<%= state.recovered %>" name="recovered">
-    <input type="hidden" value="<%= state.death %>" name="death">
-    <input type="hidden" value="<%= state.totalTest %>" name="total_test">
-    <input type="hidden" value="<%= state.positiveTests %>" name="positive_test">
-    <input type="hidden" value="<%= state.negativeTests %>" name="negative_test">
-    <button type="submit">Save to fave</button>
-  </form>
-  <% }) %>
+  
+  <%- include('./state-card-button') %>
+
 </body>
 
 </html>

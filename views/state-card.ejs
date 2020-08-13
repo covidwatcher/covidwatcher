@@ -1,0 +1,17 @@
+<div id="state-container">
+    <% states.forEach(state => { %>
+    <div class="state-card">
+      <h2>State: <%= state.stateName %></h2>
+      <p>Last updated:<br> <%= state.date %></p>
+      <p>Positive cases:<br> <%= state.positive %></p>
+      <p>Negative cases:<br> <%= state.negative %></p>
+      <p>Hospitalized currently:<br> <%= state.hospitalizedCurrently %></p>
+      <p>Total recovered:<br> <%= state.recovered %></p>
+      <p>Total deaths:<br> <%= state.death %></p>
+      <p>Total tests:<br> <%= state.totalTest %></p>
+      <p>Total positive tests:<br> <%= state.positiveTests %></p>
+      <p>Total negative tests:<br> <%= state.negativeTests %></p>
+      <br>
+    </div>
+    <% }) %>
+  </div>

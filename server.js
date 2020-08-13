@@ -14,6 +14,11 @@ app.use(cors());
 
 // Application Middleware
 app.use(express.urlencoded({ extended: true }));
+const favicon = require('serve-favicon');
+const path = require('path');
+
+app.use(favicon(path.join(__dirname, 'public', 'images/virus-favicon.png')));
+
 
 // Set the view engine for server-side templating
 app.set('view engine', 'ejs');
