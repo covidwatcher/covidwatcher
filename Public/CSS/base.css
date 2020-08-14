@@ -6,10 +6,6 @@ body {
     background-color: rgba(128, 128, 128, 0.349);
 }
 
-main {
-    min-height: 450px;
-}
-
 a:visited {
     color: rgb(205, 175, 92);
 }
@@ -43,39 +39,10 @@ header {
     background-size: 100% 100%;
 }
 
-.welcome {
-    padding: 5px;
-    margin: 10px;
-    border-radius: 3% 3% 3% 3%;
-    box-shadow: 3px 3px 5px rgb(102, 56, 26);
-    background-color: whitesmoke;
-    font-family: 'Recursive', sans-serif;
-}
-
 .topic {
     text-align: center;
     font-size: 22px;
     margin: 5px;
-}
-
-#state-container {
-    display: grid;
-    grid-template-columns: 50% 50%;
-}
-
-.state-card:nth-of-type(odd) {
-    grid-column: 1;
-}
-
-.state-card:nth-of-type(even) {
-    grid-column: 2;
-}
-
-.state-card {
-    border-radius: 3% 3% 3% 3%;
-    margin: 3px;
-    background-color: #f4a36188;;
-    box-shadow: 3px 3px 5px rgb(102, 56, 26);
 }
 
 div > h2 {
@@ -85,23 +52,6 @@ div > h2 {
 
 p {
     padding: 2px;
-}
-
-.container {
-    padding: 5px;
-    margin: 10px;
-    border-radius: 3% 3% 3% 3%;
-    box-shadow: 3px 3px 5px rgb(102, 56, 26);
-    background-color: whitesmoke;
-    font-family: 'Recursive', sans-serif;
-}
-
-.image {
-    max-width: 300px;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    width: 50%;
 }
 
 div > b {
