@@ -3,6 +3,8 @@
 // Application Dependencies
 require('dotenv').config();
 const express = require('express');
+var methodOverride = require('method-override')
+
 const cors = require('cors');
 const superagent = require('superagent');
 const pg = require('pg');
@@ -14,6 +16,14 @@ app.use(cors());
 
 // Application Middleware
 app.use(express.urlencoded({ extended: true }));
+
+// override with POST having ?_method=DELETE
+app.use(methodOverride('_method'))
+
+/* <form method="POST" action="/resource?_method=DELETE">
+  <button type="submit">Delete resource</button>
+</form> */
+
 const favicon = require('serve-favicon');
 const path = require('path');
 
