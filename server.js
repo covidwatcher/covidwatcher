@@ -39,7 +39,7 @@ const client = new pg.Client(process.env.DATABASE_URL);
 client.on('error', err => console.log(err));
 
 // Route Definitions
-app.get('/', getSavedStates);
+// app.get('/', getSavedStates);
 app.get('/state', getStateData);
 app.get('/about', (req, res) => {
   res.render('about.ejs');
