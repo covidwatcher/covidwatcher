@@ -100,14 +100,13 @@ function getSavedStates(request, response) {
           .then(response => new States(response.body))
           .then(state => {
             const SQL = `
-            UPDATE userstates 
-            SET "updatedTime" = $1, positive = $2, negative = $3, "hospitalizedCurrently" = $4, recovered = $5, death = $6, "totalTest" = $7, "positiveTests" = $8, "negativeTests" = $9
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-            WHERE "stateName" = ${state};
+            UPDATE userstates
+            SET "updatedTime" = "${state.date}", positive = ${state.positive}, negative = ${state.negative}, "hospitalizedCurrently" = ${state.hospitalizedCurrently}, recovered = ${state.recovered}, death = ${state.death}, "totalTest" = ${state.total_test}, "positiveTests" = ${state.positive_test}, "negativeTests" = ${state.negative_test}
+            WHERE "stateName" = "${state.stateName}";
             `;
-            let { date, positive, negative, hospitalized, recovered, death, total_test, positive_test, negative_test } = request.body
-            let values = [date, positive, negative, hospitalized, recovered, death, total_test, positive_test, negative_test];
-            return client.query(SQL, values)
+            console.log(state.stateName, state.date);
+            // let values = [state.date, state.positive, state.negative, state.hospitalized, state.recovered, state.death, state.total_test, state.positive_test, state.negative_test];
+            return client.query(SQL)//,values
               .then(() => state)
           })
       }))
