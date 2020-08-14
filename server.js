@@ -106,7 +106,7 @@ function getSavedStates(request, response) {
         // console.log('Row is out of date: ', row);
         let state = row.stateName;
         const url = `https://api.covidtracking.com/v1/states/${state}/current.json`;
-        superagent.get(url)
+        return superagent.get(url)
           .then(response => {
             return new States(response.body);
           })
@@ -114,9 +114,10 @@ function getSavedStates(request, response) {
             // console.log(state);
             const SQL = `
             UPDATE userstates
-            SET "updatedTime" = '10'
-            WHERE "stateName" = '${state.stateName}'
+            SET "updatedTime" = '11'
+            WHERE "stateName" = $1
             `;
+            let values = [state.stateName];
             // , positive = ${state.positive}, negative = ${state.negative}, "hospitalizedCurrently" = ${state.hospitalizedCurrently}, recovered = ${state.recovered}, death = ${state.death}, "totalTest" = ${state.total_test}, "positiveTests" = 10
 
             //   , "negativeTests" = ${state.negative_test}
@@ -124,16 +125,23 @@ function getSavedStates(request, response) {
 
             // console.log(state.stateName, state.date);
             // let values = [state.date, state.positive, state.negative, state.hospitalized, state.recovered, state.death, state.total_test, state.positive_test, state.negative_test];
-            return client.query(SQL)//,values
+            return client.query(SQL, values)
               .then(results => {
                 console.log(results);
                 const SQL = `
                 SELECT *
                 FROM userstates
-                WHERE "stateName" = '${results.stateName}'
+                WHERE "stateName" = '${state.stateName}'
                 `;
                 return client.query(SQL)
+                  .then(results => {
+                    return results.row[0];
+                  })
               })
+          })
+          .catch(err => {
+            console.log(err);
+            return row;
           })
       }))
     })
