@@ -12,6 +12,9 @@
       <p>Total positive tests:<br> <%= state.positiveTests %></p>
       <p>Total negative tests:<br> <%= state.negativeTests %></p>
       <br>
+      <form method="POST" action="/states/<%= state.stateName %>?_method=DELETE">
+      <button>Delete State</button>
+      </form>
     </div>
     <% }) %>
   </div>
