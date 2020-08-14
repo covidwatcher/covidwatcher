@@ -21,13 +21,6 @@ app.use(express.urlencoded({ extended: true }));
 // override with POST having ?_method=DELETE
 app.use(methodOverride('_method'))
 
-/* <form method="POST" action="/resource?_method=DELETE">
-  <button type="submit">Delete resource</button>
-</form> */
-
-const favicon = require('serve-favicon');
-const path = require('path');
-
 // Set the view engine for server-side templating
 app.set('view engine', 'ejs');
 app.use(express.static('./public'));
