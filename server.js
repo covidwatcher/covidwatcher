@@ -17,6 +17,7 @@ app.use(cors());
 // Application Middleware
 app.use(express.urlencoded({ extended: true }));
 
+
 // override with POST having ?_method=DELETE
 app.use(methodOverride('_method'))
 
@@ -45,6 +46,7 @@ app.get('/about', (req, res) => {
   res.render('about.ejs');
 });
 app.post('/saveState', saveStateData);
+app.delete('/states/:state', deleteState);
 app.use('*', notFoundHandler);
 app.use(errorHandler);
 
@@ -100,7 +102,7 @@ function getSavedStates(request, response) {
 
         // let hourAgo = new Date(Date.now() - 60 * 1000 * 30);
 
-        if (timeOnRow < 0) {
+        if (timeOnRow > 0) {
           return row
         }
         // console.log('Row is out of date: ', row);
@@ -167,6 +169,23 @@ function saveStateData(request, response) {
   let values = [name, date, positive, negative, hospitalized, recovered, death, total_test, positive_test, negative_test];
   client.query(SQL, values)
     .then(response.redirect('/state'))
+    .catch(err => {
+      console.log(err);
+      errorHandler(err, request, response);
+    });
+}
+
+function deleteState(request, response) {
+  const SQL = `
+  DELETE
+  FROM userstates
+  WHERE "stateName" = $1
+  `
+  let values = [request.params.state];
+  client.query(SQL, values)
+    .then(function deleteSQLstate() {
+      response.redirect('/')
+    })
     .catch(err => {
       console.log(err);
       errorHandler(err, request, response);
