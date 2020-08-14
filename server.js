@@ -3,6 +3,8 @@
 // Application Dependencies
 require('dotenv').config();
 const express = require('express');
+var methodOverride = require('method-override')
+
 const cors = require('cors');
 const superagent = require('superagent');
 const pg = require('pg');
@@ -14,6 +16,14 @@ app.use(cors());
 
 // Application Middleware
 app.use(express.urlencoded({ extended: true }));
+
+// override with POST having ?_method=DELETE
+app.use(methodOverride('_method'))
+
+/* <form method="POST" action="/resource?_method=DELETE">
+  <button type="submit">Delete resource</button>
+</form> */
+
 const favicon = require('serve-favicon');
 const path = require('path');
 
@@ -29,7 +39,7 @@ const client = new pg.Client(process.env.DATABASE_URL);
 client.on('error', err => console.log(err));
 
 // Route Definitions
-// app.get('/', getSavedStates);
+app.get('/', getSavedStates);
 app.get('/state', getStateData);
 app.get('/about', (req, res) => {
   res.render('about.ejs');
@@ -58,7 +68,7 @@ function getStateData(request, response) {
       return statesResult;
     })
     .then(results => {
-      console.log(results);
+      // console.log(results);
       let viewModelObject = { states: results };
       response.render('state', viewModelObject)
 
@@ -88,31 +98,47 @@ function getSavedStates(request, response) {
       return Promise.all(result.rows.map(row => {
         let timeOnRow = new Date(Date.parse(row.updatedTime));
 
-        let hourAgo = new Date(Date.now() - 60 * 1000 * 30);
+        // let hourAgo = new Date(Date.now() - 60 * 1000 * 30);
 
-        if (timeOnRow > hourAgo) {
+        if (timeOnRow < 0) {
           return row
         }
-        console.log('Row is out of date: ', row)
+        // console.log('Row is out of date: ', row);
         let state = row.stateName;
         const url = `https://api.covidtracking.com/v1/states/${state}/current.json`;
-        return superagent.get(url)
-          .then(response => new States(response.body))
+        superagent.get(url)
+          .then(response => {
+            return new States(response.body);
+          })
           .then(state => {
+            // console.log(state);
             const SQL = `
             UPDATE userstates
-            SET "updatedTime" = "${state.date}", positive = ${state.positive}, negative = ${state.negative}, "hospitalizedCurrently" = ${state.hospitalizedCurrently}, recovered = ${state.recovered}, death = ${state.death}, "totalTest" = ${state.total_test}, "positiveTests" = ${state.positive_test}, "negativeTests" = ${state.negative_test}
-            WHERE "stateName" = "${state.stateName}";
+            SET "updatedTime" = '10'
+            WHERE "stateName" = '${state.stateName}'
             `;
-            console.log(state.stateName, state.date);
+            // , positive = ${state.positive}, negative = ${state.negative}, "hospitalizedCurrently" = ${state.hospitalizedCurrently}, recovered = ${state.recovered}, death = ${state.death}, "totalTest" = ${state.total_test}, "positiveTests" = 10
+
+            //   , "negativeTests" = ${state.negative_test}
+            // ;
+
+            // console.log(state.stateName, state.date);
             // let values = [state.date, state.positive, state.negative, state.hospitalized, state.recovered, state.death, state.total_test, state.positive_test, state.negative_test];
             return client.query(SQL)//,values
-              .then(() => state)
+              .then(results => {
+                console.log(results);
+                const SQL = `
+                SELECT *
+                FROM userstates
+                WHERE "stateName" = '${results.stateName}'
+                `;
+                return client.query(SQL)
+              })
           })
       }))
     })
     .then(states => {
-      console.log(states);
+      // console.log(states);
       let viewModelObject = {
         states,
       }
