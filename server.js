@@ -90,9 +90,9 @@ function getSavedStates(request, response) {
       return Promise.all(result.rows.map(row => {
         let timeOnRow = new Date(Date.parse(row.updatedTime));
 
-        // let hourAgo = new Date(Date.now() - 60 * 1000 * 30);
+        let fiveMinutesAgo = new Date(Date.now() - 60 * 1000 * 5);
 
-        if (timeOnRow > 0) {
+        if (timeOnRow > fiveMinutesAgo) {
           return row
         }
         // console.log('Row is out of date: ', row);
@@ -103,31 +103,24 @@ function getSavedStates(request, response) {
             return new States(response.body);
           })
           .then(state => {
-            // console.log(state);
             const SQL = `
             UPDATE userstates
-            SET "updatedTime" = '11'
+            SET "updatedTime" = $2, positive = $3,  negative = $4, "hospitalizedCurrently" = $5, recovered = $6, death = $7, "totalTest" = $8, "positiveTests" = $9, "negativeTests" = $10 
             WHERE "stateName" = $1
             `;
-            let values = [state.stateName];
-            // , positive = ${state.positive}, negative = ${state.negative}, "hospitalizedCurrently" = ${state.hospitalizedCurrently}, recovered = ${state.recovered}, death = ${state.death}, "totalTest" = ${state.total_test}, "positiveTests" = 10
-
-            //   , "negativeTests" = ${state.negative_test}
-            // ;
-
-            // console.log(state.stateName, state.date);
-            // let values = [state.date, state.positive, state.negative, state.hospitalized, state.recovered, state.death, state.total_test, state.positive_test, state.negative_test];
+            let values = [state.stateName, state.date, state.positive, state.negative, state.hospitalizedCurrently, state.recovered, state.death, state.totalTest, state.positiveTests, state.negativeTests];
             return client.query(SQL, values)
               .then(results => {
                 console.log(results);
                 const SQL = `
                 SELECT *
                 FROM userstates
-                WHERE "stateName" = '${state.stateName}'
+                WHERE "stateName" = $1
                 `;
-                return client.query(SQL)
+                let values = [state.stateName];
+                return client.query(SQL, values)
                   .then(results => {
-                    return results.row[0];
+                    return results.rows[0];
                   })
               })
           })
