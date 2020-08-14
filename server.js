@@ -28,9 +28,6 @@ app.use(methodOverride('_method'))
 const favicon = require('serve-favicon');
 const path = require('path');
 
-app.use(favicon(path.join(__dirname, 'public', 'images/virus-favicon.png')));
-
-
 // Set the view engine for server-side templating
 app.set('view engine', 'ejs');
 app.use(express.static('./public'));
