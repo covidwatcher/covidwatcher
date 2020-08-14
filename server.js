@@ -73,6 +73,7 @@ function notFoundHandler(request, response) {
   response.status(404).json({ notFound: true });
 }
 
+// eslint-disable-next-line no-unused-vars
 function errorHandler(error, request, response, next) {
   response.status(500).json({ error: true, message: error.message });
 }
@@ -92,21 +93,22 @@ function getSavedStates(request, response) {
         if (timeOnRow > hourAgo) {
           return row
         }
-        console.log("Row is out of date: ", row)
+        console.log('Row is out of date: ', row)
         let state = row.stateName;
         const url = `https://api.covidtracking.com/v1/states/${state}/current.json`;
         return superagent.get(url)
           .then(response => new States(response.body))
           .then(state => {
             const SQL = `
-            UPDATE userstates "stateName" = $1, "updatedTime", positive, negative, "hospitalizedCurrently", recovered, death, "totalTest", "positiveTests", "negativeTests"
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+            UPDATE userstates 
+            SET "updatedTime" = $1, positive = $2, negative = $3, "hospitalizedCurrently" = $4, recovered = $5, death = $6, "totalTest" = $7, "positiveTests" = $8, "negativeTests" = $9
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
             WHERE "stateName" = ${state};
             `;
-            let { name, date, positive, negative, hospitalized, recovered, death, total_test, positive_test, negative_test } = request.body
-            let values = [name, date, positive, negative, hospitalized, recovered, death, total_test, positive_test, negative_test];
+            let { date, positive, negative, hospitalized, recovered, death, total_test, positive_test, negative_test } = request.body
+            let values = [date, positive, negative, hospitalized, recovered, death, total_test, positive_test, negative_test];
             return client.query(SQL, values)
-            // .then(() => state)
+              .then(() => state)
           })
       }))
     })
