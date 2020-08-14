@@ -97,11 +97,17 @@ function getSavedStates(request, response) {
         const url = `https://api.covidtracking.com/v1/states/${state}/current.json`;
         return superagent.get(url)
           .then(response => new States(response.body))
-          // .then(state => {
-          //   const SQL = ``;
-          //   return client.query()
-          //     .then(() => state)
-          // })
+          .then(state => {
+            const SQL = `
+            UPDATE userstates "stateName" = $1, "updatedTime", positive, negative, "hospitalizedCurrently", recovered, death, "totalTest", "positiveTests", "negativeTests"
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+            WHERE "stateName" = ${state};
+            `;
+            let { name, date, positive, negative, hospitalized, recovered, death, total_test, positive_test, negative_test } = request.body
+            let values = [name, date, positive, negative, hospitalized, recovered, death, total_test, positive_test, negative_test];
+            return client.query(SQL, values)
+            // .then(() => state)
+          })
       }))
     })
     .then(states => {
@@ -116,20 +122,6 @@ function getSavedStates(request, response) {
       errorHandler(err, request, response);
     });
 }
-// client.query(`SELECT * FROM userstates WHERE name = $1`, [params.state])
-//   .then(result => {
-//     {
-//       return result.rows[0]; 
-//     }
-//   })
-// const state = request.query.state;
-// return superagent.get(`https://api.covidtracking.com/v1/states/${state}/current.json`)
-//   .then(data => {
-//     let { name, positive, negative, hospitalized, recovered, death, total_test, positive_test, negative_test } = request.body
-//     let values = [name, positive, negative, hospitalized, recovered, death, total_test, positive_test, negative_test];
-//     return client.query('INSERT INTO userstates', values);
-//   })
-
 
 function saveStateData(request, response) {
   const SQL = `
