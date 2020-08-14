@@ -47,3 +47,13 @@ main {
     margin-right: auto;
     width: 50%;
 }
+
+@media (min-width: 800px){
+    body {
+        max-width: 750px;
+        margin: auto
+    }
+    main {
+        min-height: 670px;
+    }
+}
