@@ -73,6 +73,7 @@ function notFoundHandler(request, response) {
   response.status(404).json({ notFound: true });
 }
 
+// eslint-disable-next-line no-unused-vars
 function errorHandler(error, request, response, next) {
   response.status(500).json({ error: true, message: error.message });
 }
@@ -92,16 +93,23 @@ function getSavedStates(request, response) {
         if (timeOnRow > hourAgo) {
           return row
         }
-        console.log("Row is out of date: ", row)
+        console.log('Row is out of date: ', row)
         let state = row.stateName;
         const url = `https://api.covidtracking.com/v1/states/${state}/current.json`;
         return superagent.get(url)
           .then(response => new States(response.body))
-          // .then(state => {
-          //   const SQL = ``;
-          //   return client.query()
-          //     .then(() => state)
-          // })
+          .then(state => {
+            const SQL = `
+            UPDATE userstates 
+            SET "updatedTime" = $1, positive = $2, negative = $3, "hospitalizedCurrently" = $4, recovered = $5, death = $6, "totalTest" = $7, "positiveTests" = $8, "negativeTests" = $9
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+            WHERE "stateName" = ${state};
+            `;
+            let { date, positive, negative, hospitalized, recovered, death, total_test, positive_test, negative_test } = request.body
+            let values = [date, positive, negative, hospitalized, recovered, death, total_test, positive_test, negative_test];
+            return client.query(SQL, values)
+              .then(() => state)
+          })
       }))
     })
     .then(states => {
@@ -116,20 +124,6 @@ function getSavedStates(request, response) {
       errorHandler(err, request, response);
     });
 }
-// client.query(`SELECT * FROM userstates WHERE name = $1`, [params.state])
-//   .then(result => {
-//     {
-//       return result.rows[0]; 
-//     }
-//   })
-// const state = request.query.state;
-// return superagent.get(`https://api.covidtracking.com/v1/states/${state}/current.json`)
-//   .then(data => {
-//     let { name, positive, negative, hospitalized, recovered, death, total_test, positive_test, negative_test } = request.body
-//     let values = [name, positive, negative, hospitalized, recovered, death, total_test, positive_test, negative_test];
-//     return client.query('INSERT INTO userstates', values);
-//   })
-
 
 function saveStateData(request, response) {
   const SQL = `
