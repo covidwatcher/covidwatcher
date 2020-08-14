@@ -6,6 +6,10 @@ body {
     background-color: rgba(128, 128, 128, 0.349);
 }
 
+main {
+    min-height: 450px;
+}
+
 a:visited {
     color: rgb(205, 175, 92);
 }
@@ -18,12 +22,12 @@ h1 {
     text-align: center;
     font-size: 38px;
     font-family: 'Crimson Text', serif;
-    margin: 5px;
+    margin-bottom: 5px;
     padding-top: 10px;
 }
 
 ul {
-    margin: 5px;
+    margin-top: 10px;
     text-align: center;
 }
 
@@ -33,15 +37,13 @@ li {
 }
 
 header {
-    /* background-color: rgb(16, 93, 170); */
     color: #F4A261;
-    padding: 5px;
+    padding: 30px;
     background-image: url(../images/virus_head.png);
     background-size: 100% 100%;
 }
 
 .welcome {
-    border: 1px solid black;
     padding: 5px;
     margin: 10px;
     border-radius: 3% 3% 3% 3%;
@@ -70,10 +72,10 @@ header {
 }
 
 .state-card {
-    border: 1px solid black;
     border-radius: 3% 3% 3% 3%;
     margin: 3px;
-    background-color: honeydew;
+    background-color: #f4a36188;;
+    box-shadow: 3px 3px 5px rgb(102, 56, 26);
 }
 
 div > h2 {
@@ -83,4 +85,68 @@ div > h2 {
 
 p {
     padding: 2px;
+}
+
+.container {
+    padding: 5px;
+    margin: 10px;
+    border-radius: 3% 3% 3% 3%;
+    box-shadow: 3px 3px 5px rgb(102, 56, 26);
+    background-color: whitesmoke;
+    font-family: 'Recursive', sans-serif;
+}
+
+.image {
+    max-width: 300px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+
+div > b {
+    text-align: center;
+    font-weight: bolder;
+    display: block;
+    margin-top: 15px;
+    margin-bottom: -20px;
+    font-size: 20px;
+}
+
+footer {
+    margin-top: 10px;
+}
+
+#one {
+    text-align: center;
+}
+
+.credit {
+    font-size: 10px;
+    color: rgb(202, 198, 198);
+}
+
+.text {
+    text-align: center;
+}
+
+#creditLink {
+    color: rgb(202, 198, 198);
+}
+
+fieldset, h3 {
+    text-align: center;
+    padding-top: 10px;
+}
+
+h3 {
+    margin-bottom: 5px;
+}
+
+h4 {
+    margin-bottom: 5px;
+}
+
+.statePage {
+    margin-top: 10px;
 }

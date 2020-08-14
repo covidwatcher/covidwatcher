@@ -14,18 +14,23 @@
 
 <body>
   <%- include('./header') %>
-  <form>
-    <fieldset>
-      <h4>Search by abbreviated state name</h4>
-      <form action="/state" id="stateCode">
-        <input type="text" name="state" placeholder="Enter a state abbreviation" required>
-        <input type="submit" value="Submit" /><br>
-    </fieldset>
-  </form>
-  <h2>Save a state for easy look up</h2>
-  
-  <%- include('./state-card-button') %>
-
+  <main class="statePage">
+    <form>
+      <fieldset>
+        <h4>Search by abbreviated state name</h4>
+        <form action="/state" id="stateCode">
+          <input type="text" name="state" placeholder="Enter a state abbreviation" required>
+          <input type="submit" value="Submit" /><br>
+      </fieldset>
+    </form>
+    <h3>Save a state for easy look up</h3>
+    <div id="card">
+      <%- include('./state-card-button') %>
+    </div>
+  </main>
+  <div id="state">
+    <%- include('./footer') %>
+  </div>
 </body>
 
 </html>
