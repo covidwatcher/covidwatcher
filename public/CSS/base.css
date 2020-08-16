@@ -40,6 +40,10 @@ header {
     border-radius: 0px 0px 10px 10px;
 }
 
+::placeholder{
+    color: #011c3c56;
+}
+
 .topic {
     text-align: center;
     font-size: 22px;
