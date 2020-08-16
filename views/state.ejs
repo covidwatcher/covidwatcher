@@ -8,6 +8,16 @@
     #delete-button {
       display: none;
     }
+
+    #state-container {
+    display: grid;
+    grid-template-columns: 100% !important;
+    }
+
+    .state-card{
+      width: 370px !important;
+      margin: auto !important;
+    }
     </style>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="./CSS/styles.css">
@@ -28,7 +38,7 @@
           <input type="submit" value="Submit" /><br>
       </fieldset>
     </form>
-    <h3>Save a state for easy look up</h3>
+    <h3>Save a state to the Home page to watch it's COVID-19 stats</h3>
     <div id="card">
       <%- include('./state-card') %>
     </div>

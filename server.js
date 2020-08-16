@@ -213,7 +213,7 @@ function arraySearch(state, array) {
 }
 
 
-var stateArray = [
+const stateArray = [
   {abrv: 'AL', name: 'Alabama', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Flag_of_Alabama.svg/23px-Flag_of_Alabama.svg.png'},
   {abrv: 'AK', name: 'Alaska', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Flag_of_Alaska.svg/21px-Flag_of_Alaska.svg.png'},
   {abrv: 'AR', name: 'Arkansas', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Flag_of_Arkansas.svg/23px-Flag_of_Arkansas.svg.png'},
