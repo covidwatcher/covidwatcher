@@ -1,8 +1,12 @@
 <div id="state-container">
   <% states.forEach(state => { %>
   <div class="state-card">
-    <h2>State: <%= state.displayName %></h2>
     <table>
+      <td colspan="2" style="text-align:center">
+        <img src="<%= state.flag %>" alt="state.stateName">
+        <h2><%= state.displayName %></h2>
+      </td>
+      </tr>
       <tr>
         <th>Type</th>
         <th>Number</th>
@@ -44,7 +48,7 @@
         <td><%= state.updatedTime %></td>
       </tr>
       <tr>
-        <td colspan="2"  style="text-align:center">
+        <td colspan="2" style="text-align:center">
           <div id="save-button">
             <form method="POST" action="/saveState">
               <input type="hidden" value="<%= state.stateName %>" name="name">
