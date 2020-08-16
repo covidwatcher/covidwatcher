@@ -189,38 +189,31 @@ function deleteState(request, response) {
 }
 
 function States(state) {
+  const altText = 'Not Reported';
   this.date = new Date();
   this.stateName = state.state;
-  this.positive = state.positive || 'Data not provided';
-  this.negative = state.negative || 'Data not provided';
-  this.hospitalizedCurrently = state.hospitalizedCurrently || 'Data not provided';
-  this.recovered = state.recovered || 'Data not provided';
-  this.death = state.death || 'Data not provided';
-  this.totalTest = state.totalTestsViral || 'Data not provided';
-  this.positiveTests = state.positiveTestsViral || 'Data not provided';
-  this.negativeTests = state.negativeTestsViral || 'Data not provided';
-  this.displayName = abrvToName(state.state, nameConvert).name || state.state;
-  this.flag = abrvToName(state.state, nameConvert).flag;
+  this.positive = state.positive || altText;
+  this.negative = state.negative || altText;
+  this.hospitalizedCurrently = state.hospitalizedCurrently || altText;
+  this.recovered = state.recovered || altText;
+  this.death = state.death || altText;
+  this.totalTest = state.totalTestsViral || altText;
+  this.positiveTests = state.positiveTestsViral || altText;
+  this.negativeTests = state.negativeTestsViral || altText;
+  this.displayName = arraySearch(state.state, stateArray).name || state.state;
+  this.flag = arraySearch(state.state, stateArray).flag;
 }
 
-function abrvToName(abrvKey, array) {
+function arraySearch(state, array) {
   for (var i = 0; i < array.length; i++) {
-    if (array[i].abrv === abrvKey) {
-      return array[i];
-    }
-  }
-}
-
-function nameToAbrv(nameKey, array) {
-  for (var i = 0; i < array.length; i++) {
-    if (array[i].name === nameKey) {
+    if (array[i].abrv === state || array[i].name === state) {
       return array[i];
     }
   }
 }
 
 
-var nameConvert = [
+var stateArray = [
   {abrv: 'AL', name: 'Alabama', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Flag_of_Alabama.svg/23px-Flag_of_Alabama.svg.png'},
   {abrv: 'AK', name: 'Alaska', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Flag_of_Alaska.svg/21px-Flag_of_Alaska.svg.png'},
   {abrv: 'AR', name: 'Arkansas', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Flag_of_Arkansas.svg/23px-Flag_of_Arkansas.svg.png'},
