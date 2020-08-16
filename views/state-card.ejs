@@ -1,20 +1,72 @@
 <div id="state-container">
-    <% states.forEach(state => { %>
-    <div class="state-card">
-      <h2>State: <%= state.stateName %></h2>
-      <p>Last updated:<br> <%= state.updatedTime %></p>
-      <p>Positive cases:<br> <%= state.positive %></p>
-      <p>Negative cases:<br> <%= state.negative %></p>
-      <p>Hospitalized currently:<br> <%= state.hospitalizedCurrently %></p>
-      <p>Total recovered:<br> <%= state.recovered %></p>
-      <p>Total deaths:<br> <%= state.death %></p>
-      <p>Total tests:<br> <%= state.totalTest %></p>
-      <p>Total positive tests:<br> <%= state.positiveTests %></p>
-      <p>Total negative tests:<br> <%= state.negativeTests %></p>
-      <br>
-      <form method="POST" action="/states/<%= state.stateName %>?_method=DELETE">
-      <button>Delete State</button>
-      </form>
-    </div>
-    <% }) %>
+  <% states.forEach(state => { %>
+  <div class="state-card">
+    <h2>State: <%= state.displayName %></h2>
+    <table>
+      <tr>
+        <th>Type</th>
+        <th>Number</th>
+      </tr>
+      <tr>
+        <td>Positive cases</td>
+        <td><%= state.positive %></td>
+      </tr>
+      <tr>
+        <td>Negative cases</td>
+        <td><%= state.negative %></td>
+      </tr>
+      <tr>
+        <td>Hospitalized currently</td>
+        <td><%= state.hospitalizedCurrently %></td>
+      </tr>
+      <tr>
+        <td>Total recovered</td>
+        <td><%= state.recovered %></td>
+      </tr>
+      <tr>
+        <td>Total deaths</td>
+        <td><%= state.death %></td>
+      </tr>
+      <tr>
+        <td>Total tests</td>
+        <td><%= state.totalTest %></td>
+      </tr>
+      <tr>
+        <td>Total positive tests</td>
+        <td><%= state.positiveTests %></td>
+      </tr>
+      <tr>
+        <td>Total negative tests</td>
+        <td><%= state.negativeTests %></td>
+      </tr>
+      <tr>
+        <td>Last updated</td>
+        <td><%= state.updatedTime %></td>
+      </tr>
+      <tr>
+        <td colspan="2"  style="text-align:center">
+          <div id="save-button">
+            <form method="POST" action="/saveState">
+              <input type="hidden" value="<%= state.stateName %>" name="name">
+              <input type="hidden" value="<%= state.positive %>" name="positive">
+              <input type="hidden" value="<%= state.negative %>" name="negative">
+              <input type="hidden" value="<%= state.hospitalizedCurrently %>" name="hospitalized">
+              <input type="hidden" value="<%= state.recovered %>" name="recovered">
+              <input type="hidden" value="<%= state.death %>" name="death">
+              <input type="hidden" value="<%= state.totalTest %>" name="total_test">
+              <input type="hidden" value="<%= state.positiveTests %>" name="positive_test">
+              <input type="hidden" value="<%= state.negativeTests %>" name="negative_test">
+              <button type="submit">Add to Home</button>
+            </form>
+          </div>
+          <div id="delete-button">
+            <form method="POST" action="/states/<%= state.stateName %>?_method=DELETE">
+              <button>Delete State</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+    </table>
   </div>
+  <% }) %>
+</div>

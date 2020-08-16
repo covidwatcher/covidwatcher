@@ -122,6 +122,10 @@ function getSavedStates(request, response) {
                   .then(results => {
                     return results.rows[0];
                   })
+                  .then(state => {
+                    const { runChart } = require('chart.js');
+                    runChart(state);
+                  })
               })
           })
           .catch(err => {
@@ -186,7 +190,75 @@ function States(state) {
   this.totalTest = state.totalTestsViral || 'Data not provided';
   this.positiveTests = state.positiveTestsViral || 'Data not provided';
   this.negativeTests = state.negativeTestsViral || 'Data not provided';
+  this.displayName = search(state.state, nameConvert).name || state.state;
 }
+
+function search(abrvKey, myArray) {
+  for (var i = 0; i < myArray.length; i++) {
+    if (myArray[i].abrv === abrvKey) {
+      return myArray[i];
+    }
+  }
+}
+
+var nameConvert = [
+  {abrv: 'AL', name: 'Alabama'},
+  {abrv: 'AK', name: 'Alaska'},
+  {abrv: 'AR', name: 'Arkansas'},
+  {abrv: 'CA', name: 'California'},
+  {abrv: 'CO', name: 'Colorado'},
+  {abrv: 'CT', name: 'Connecticut'},
+  {abrv: 'DE', name: 'Delaware'},
+  {abrv: 'FL', name: 'Florida'},
+  {abrv: 'GA', name: 'Georgia'},
+  {abrv: 'HI', name: 'Hawaii'},
+  {abrv: 'ID', name: 'Idaho'},
+  {abrv: 'IL', name: 'Illinois'},
+  {abrv: 'IN', name: 'Indiana'},
+  {abrv: 'IA', name: 'Iowa'},
+  {abrv: 'KS', name: 'Kansas'},
+  {abrv: 'KY', name: 'Kentucky'},
+  {abrv: 'LA', name: 'Louisiana'},
+  {abrv: 'ME', name: 'Maine'},
+  {abrv: 'MD', name: 'Maryland'},
+  {abrv: 'MA', name: 'Massachusetts'},
+  {abrv: 'MI', name: 'Michigan'},
+  {abrv: 'MN', name: 'Minnesota'},
+  {abrv: 'MS', name: 'Mississippi'},
+  {abrv: 'MO', name: 'Missouri'},
+  {abrv: 'MT', name: 'Montana'},
+  {abrv: 'NE', name: 'Nebraska'},
+  {abrv: 'NV', name: 'Nevada'},
+  {abrv: 'NH', name: 'New Hampshire'},
+  {abrv: 'NJ', name: 'New Jersey'},
+  {abrv: 'NM', name: 'New Mexico'},
+  {abrv: 'NY', name: 'New York'},
+  {abrv: 'NC', name: 'North Carolina'},
+  {abrv: 'ND', name: 'North Dakota'},
+  {abrv: 'OH', name: 'Ohio'},
+  {abrv: 'OK', name: 'Oklahoma'},
+  {abrv: 'OR', name: 'Oregon'},
+  {abrv: 'PA', name: 'Pennsylvania'},
+  {abrv: 'RI', name: 'Rhode Island'},
+  {abrv: 'SC', name: 'South Carolina'},
+  {abrv: 'SD', name: 'South Dakota'},
+  {abrv: 'TN', name: 'Tennessee'},
+  {abrv: 'TX', name: 'Texas'},
+  {abrv: 'UT', name: 'Utah'},
+  {abrv: 'VT', name: 'Vermont'},
+  {abrv: 'VA', name: 'Virginia'},
+  {abrv: 'WA', name: 'Washington'},
+  {abrv: 'WV', name: 'West Virginia'},
+  {abrv: 'WI', name: 'Wisconsin'},
+  {abrv: 'WY', name: 'Wyoming'},
+  {abrv: 'DC', name: 'District of Columbia'},
+  {abrv: 'AS', name: 'American Samoa'},
+  {abrv: 'GU', name: 'Guam'},
+  {abrv: 'MP', name: 'Northern Mariana Islands'},
+  {abrv: 'PR', name: 'Puerto Rico'},
+  {abrv: 'VI', name: 'U.S. Virgin Islands'},
+];
+
 
 // App listener
 client.connect()

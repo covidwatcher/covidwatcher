@@ -4,7 +4,11 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>State Search</title>
-    <meta name="description" content="">
+    <style type="text/css"> 
+    #delete-button {
+      display: none;
+    }
+    </style>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="./CSS/styles.css">
     <link rel="icon" href="images/virus-favicon.png">
@@ -26,12 +30,11 @@
     </form>
     <h3>Save a state for easy look up</h3>
     <div id="card">
-      <%- include('./state-card-button') %>
+      <%- include('./state-card') %>
     </div>
   </main>
   <div id="state">
     <%- include('./footer') %>
   </div>
 </body>
-
 </html>
