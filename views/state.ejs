@@ -4,7 +4,21 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>State Search</title>
-    <meta name="description" content="">
+    <style type="text/css"> 
+    #delete-button {
+      display: none;
+    }
+
+    #state-container {
+    display: grid;
+    grid-template-columns: 100% !important;
+    }
+
+    .state-card{
+      width: 370px !important;
+      margin: auto !important;
+    }
+    </style>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="./CSS/styles.css">
     <link rel="icon" href="images/virus-favicon.png">
@@ -20,18 +34,17 @@
       <fieldset>
         <h4>Search by abbreviated state name</h4>
         <form action="/state" id="stateCode">
-          <input type="text" name="state" placeholder="Enter a state abbreviation" required>
+          <input type="text" name="state" placeholder="E.g: 'IA'" required>
           <input type="submit" value="Submit" /><br>
       </fieldset>
     </form>
-    <h3>Save a state for easy look up</h3>
+    <h3>Save a state to the Home page to watch it's COVID-19 stats</h3>
     <div id="card">
-      <%- include('./state-card-button') %>
+      <%- include('./state-card') %>
     </div>
   </main>
   <div id="state">
     <%- include('./footer') %>
   </div>
 </body>
-
 </html>

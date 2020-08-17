@@ -36,7 +36,12 @@ header {
     color: #F4A261;
     padding: 30px;
     background-image: url(../images/virus_head.png);
-    background-size: 100% 100%;
+    background-size: 100%;
+    border-radius: 0px 0px 10px 10px;
+}
+
+::placeholder{
+    color: #011c3c56;
 }
 
 .topic {
