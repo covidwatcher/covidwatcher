@@ -6,15 +6,13 @@ body {
     background-color: #D0CCD0;
 }
 
-a {
+li > a {
     color: rgb(0, 38, 255);
     font-family: 'Roboto';
     text-decoration: none;
     color: white;
     text-shadow: 6px 3px 6px black;
 }
-
-
 
 h1 {
     text-align: center;
@@ -125,16 +123,11 @@ h4 {
 
 .tHead {
     font-weight: bolder;
-    /* border: solid 1px black; */
 }
 
 #stateName {
     font-size: 25px;
 }
-
-/* button {
-    width: 200px;
-} */
 
 button {
     background:linear-gradient(to bottom, rgb(249, 193, 67) 5%, rgb(245, 137, 60) 100%);
@@ -151,4 +144,8 @@ button {
     text-shadow:6px 3px 6px #d6922b;
     box-shadow: 0 8px 12px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
     margin-bottom: 5px;
+}
+
+#covid {
+    font-size: 18px;
 }

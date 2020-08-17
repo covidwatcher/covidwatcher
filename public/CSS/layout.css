@@ -1,5 +1,5 @@
 main {
-    min-height: 450px;
+    min-height: 410px;
 }
 
 .welcome {
@@ -31,7 +31,6 @@ table {
 
 td{
     padding: 5px;
-    /* text-align: center; */
 }
 
 .container {
