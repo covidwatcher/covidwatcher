@@ -32,13 +32,13 @@
   <main class="statePage">
     <form>
       <fieldset>
-        <h4>Search by abbreviated state name</h4>
+        <h4>Search by abbreviated or full state name</h4>
         <form action="/state" id="stateCode">
-          <input type="text" name="state" placeholder="E.g: 'IA'" required>
+          <input type="text" name="state" placeholder="E.g: 'IA' or 'Iowa'" required>
           <input type="submit" value="Submit" /><br>
       </fieldset>
     </form>
-    <h3>Save a state to the Home page to watch it's COVID-19 stats</h3>
+    <h3>Save a state to the Home page to watch its COVID-19 stats</h3>
     <div id="card">
       <%- include('./state-card') %>
     </div>
