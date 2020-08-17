@@ -59,7 +59,9 @@
               <input type="hidden" value="<%= state.totalTest %>" name="total_test">
               <input type="hidden" value="<%= state.positiveTests %>" name="positive_test">
               <input type="hidden" value="<%= state.negativeTests %>" name="negative_test">
-              <button type="submit">Add to Home</button>
+              <input type="hidden" value="<%= state.displayName %>" name="displayName">
+              <input type="hidden" value="<%= state.flag %>" name="flag">
+              <button type="submit" onclick="saveAlert('<%= state.displayName %>')">Add to Home</button>
             </form>
           </div>
           <div id="delete-button">
@@ -72,3 +74,10 @@
     </table>
   </div>
   <% }) %>
+
+<script>
+  function saveAlert(stateName){
+  let savedState = stateName;
+  alert(`${stateName} saved to home page`)
+}
+</script>

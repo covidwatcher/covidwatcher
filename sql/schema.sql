@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS userstates (
   id SERIAL PRIMARY KEY,
-  "stateName" VARCHAR(50),
+  "stateName" VARCHAR(50) ,
   "updatedTime" VARCHAR(200),
   positive VARCHAR(50),
   negative VARCHAR(50),
@@ -9,5 +9,8 @@ CREATE TABLE IF NOT EXISTS userstates (
   death VARCHAR(50),
   "totalTest" VARCHAR(50),
   "positiveTests" VARCHAR(50),
-  "negativeTests" VARCHAR(50)
+  "negativeTests" VARCHAR(50),
+  "displayName" VARCHAR(8000),
+  flag VARCHAR(8000),
+  CONSTRAINT u_state UNIQUE("stateName") 
 );

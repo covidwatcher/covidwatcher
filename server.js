@@ -46,7 +46,8 @@ function getStateData(request, response) {
   // let state = request.query.state;
   // if(request.query.state.length > 2){
   //   let state = nameToAbrv(state, nameConvert).name;
-  const state = request.query.state;
+  let state = request.query.state;
+
 
   // if(state.toString().length > 2){
   //   state = nameToAbrv(state, nameConvert).name;
@@ -57,6 +58,14 @@ function getStateData(request, response) {
     response.render('state', viewModelObject)
     return
   }
+
+  if (request.query.state.length > 2) {
+    state = (arraySearch(state, stateArray).abrv).toLowerCase();
+  } else state = request.query.state;
+
+  console.log(state);
+  console.log((arraySearch(state, stateArray).abrv).toLowerCase());
+
   const url = `https://api.covidtracking.com/v1/states/${state}/current.json`;
   superagent.get(url)
     .query({
@@ -158,11 +167,11 @@ function getSavedStates(request, response) {
 
 function saveStateData(request, response) {
   const SQL = `
-  INSERT INTO userstates ("stateName", "updatedTime", positive, negative, "hospitalizedCurrently", recovered, death, "totalTest", "positiveTests", "negativeTests")
-  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+  INSERT INTO userstates ("stateName", "updatedTime", positive, negative, "hospitalizedCurrently", recovered, death, "totalTest", "positiveTests", "negativeTests", "displayName", flag)
+  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
   `;
-  let { name, date, positive, negative, hospitalized, recovered, death, total_test, positive_test, negative_test } = request.body
-  let values = [name, date, positive, negative, hospitalized, recovered, death, total_test, positive_test, negative_test];
+  let { name, date, positive, negative, hospitalized, recovered, death, total_test, positive_test, negative_test, displayName, flag } = request.body
+  let values = [name, date, positive, negative, hospitalized, recovered, death, total_test, positive_test, negative_test, displayName, flag];
   client.query(SQL, values)
     .then(response.redirect('/state'))
     .catch(err => {
@@ -206,69 +215,68 @@ function States(state) {
 
 function arraySearch(state, array) {
   for (var i = 0; i < array.length; i++) {
-    if (array[i].abrv === state || array[i].name === state) {
+    if (array[i].abrv.toLowerCase() === state.toLowerCase() || array[i].name.toLowerCase() === state.toLowerCase()) {
       return array[i];
     }
   }
 }
 
-
 const stateArray = [
-  {abrv: 'AL', name: 'Alabama', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Flag_of_Alabama.svg/23px-Flag_of_Alabama.svg.png'},
-  {abrv: 'AK', name: 'Alaska', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Flag_of_Alaska.svg/21px-Flag_of_Alaska.svg.png'},
-  {abrv: 'AR', name: 'Arkansas', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Flag_of_Arkansas.svg/23px-Flag_of_Arkansas.svg.png'},
-  {abrv: 'CA', name: 'California', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Flag_of_California.svg/23px-Flag_of_California.svg.png'},
-  {abrv: 'CO', name: 'Colorado', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Flag_of_Colorado.svg/23px-Flag_of_Colorado.svg.png'},
-  {abrv: 'CT', name: 'Connecticut', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Flag_of_Connecticut.svg/20px-Flag_of_Connecticut.svg.png'},
-  {abrv: 'DE', name: 'Delaware', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/Flag_of_Delaware.svg/23px-Flag_of_Delaware.svg.png'},
-  {abrv: 'FL', name: 'Florida', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Flag_of_Florida.svg/23px-Flag_of_Florida.svg.png'},
-  {abrv: 'GA', name: 'Georgia', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Flag_of_Georgia_%28U.S._state%29.svg/23px-Flag_of_Georgia_%28U.S._state%29.svg.png'},
-  {abrv: 'HI', name: 'Hawaii', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Flag_of_Hawaii.svg/23px-Flag_of_Hawaii.svg.png'},
-  {abrv: 'ID', name: 'Idaho', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Flag_of_Idaho.svg/19px-Flag_of_Idaho.svg.png'},
-  {abrv: 'IL', name: 'Illinois', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Flag_of_Illinois.svg/23px-Flag_of_Illinois.svg.png'},
-  {abrv: 'IN', name: 'Indiana', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Flag_of_Indiana.svg/23px-Flag_of_Indiana.svg.png'},
-  {abrv: 'IA', name: 'Iowa', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Flag_of_Iowa.svg/23px-Flag_of_Iowa.svg.png'},
-  {abrv: 'KS', name: 'Kansas', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Flag_of_Kansas.svg/23px-Flag_of_Kansas.svg.png'},
-  {abrv: 'KY', name: 'Kentucky', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Flag_of_Kentucky.svg/23px-Flag_of_Kentucky.svg.png'},
-  {abrv: 'LA', name: 'Louisiana', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Flag_of_Louisiana.svg/23px-Flag_of_Louisiana.svg.png'},
-  {abrv: 'ME', name: 'Maine', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Flag_of_Maine.svg/19px-Flag_of_Maine.svg.png'},
-  {abrv: 'MD', name: 'Maryland', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Flag_of_Maryland.svg/23px-Flag_of_Maryland.svg.png'},
-  {abrv: 'MA', name: 'Massachusetts', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Flag_of_Massachusetts.svg/23px-Flag_of_Massachusetts.svg.png'},
-  {abrv: 'MI', name: 'Michigan', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Flag_of_Michigan.svg/23px-Flag_of_Michigan.svg.png'},
-  {abrv: 'MN', name: 'Minnesota', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Flag_of_Minnesota.svg/23px-Flag_of_Minnesota.svg.png'},
-  {abrv: 'MS', name: 'Mississippi', flag:''},
-  {abrv: 'MO', name: 'Missouri', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Flag_of_Missouri.svg/23px-Flag_of_Missouri.svg.png'},
-  {abrv: 'MT', name: 'Montana', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Flag_of_Montana.svg/23px-Flag_of_Montana.svg.png'},
-  {abrv: 'NE', name: 'Nebraska', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Flag_of_Nebraska.svg/23px-Flag_of_Nebraska.svg.png'},
-  {abrv: 'NV', name: 'Nevada', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Flag_of_Nevada.svg/23px-Flag_of_Nevada.svg.png'},
-  {abrv: 'NH', name: 'New Hampshire', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Flag_of_New_Hampshire.svg/23px-Flag_of_New_Hampshire.svg.png'},
-  {abrv: 'NJ', name: 'New Jersey', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Flag_of_New_Jersey.svg/23px-Flag_of_New_Jersey.svg.png'},
-  {abrv: 'NM', name: 'New Mexico', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Flag_of_New_Mexico.svg/23px-Flag_of_New_Mexico.svg.png'},
-  {abrv: 'NY', name: 'New York', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Flag_of_New_York.svg/23px-Flag_of_New_York.svg.png'},
-  {abrv: 'NC', name: 'North Carolina', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Flag_of_North_Carolina.svg/23px-Flag_of_North_Carolina.svg.png'},
-  {abrv: 'ND', name: 'North Dakota', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Flag_of_North_Dakota.svg/21px-Flag_of_North_Dakota.svg.png'},
-  {abrv: 'OH', name: 'Ohio', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Flag_of_Ohio.svg/25px-Flag_of_Ohio.svg.png'},
-  {abrv: 'OK', name: 'Oklahoma', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Flag_of_Oklahoma.svg/23px-Flag_of_Oklahoma.svg.png'},
-  {abrv: 'OR', name: 'Oregon', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Flag_of_Oregon.svg/23px-Flag_of_Oregon.svg.png'},
-  {abrv: 'PA', name: 'Pennsylvania', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Flag_of_Pennsylvania.svg/23px-Flag_of_Pennsylvania.svg.png'},
-  {abrv: 'RI', name: 'Rhode Island', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Flag_of_Rhode_Island.svg/19px-Flag_of_Rhode_Island.svg.png'},
-  {abrv: 'SC', name: 'South Carolina', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Flag_of_South_Carolina.svg/23px-Flag_of_South_Carolina.svg.png'},
-  {abrv: 'SD', name: 'South Dakota', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Flag_of_South_Dakota.svg/23px-Flag_of_South_Dakota.svg.png'},
-  {abrv: 'TN', name: 'Tennessee', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Flag_of_Tennessee.svg/23px-Flag_of_Tennessee.svg.png'},
-  {abrv: 'TX', name: 'Texas', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Flag_of_Texas.svg/23px-Flag_of_Texas.svg.png'},
-  {abrv: 'UT', name: 'Utah', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Flag_of_Utah.svg/23px-Flag_of_Utah.svg.png'},
-  {abrv: 'VT', name: 'Vermont', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Flag_of_Vermont.svg/23px-Flag_of_Vermont.svg.png'},
-  {abrv: 'VA', name: 'Virginia', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Flag_of_Virginia.svg/22px-Flag_of_Virginia.svg.png'},
-  {abrv: 'WA', name: 'Washington', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Flag_of_Washington.svg/23px-Flag_of_Washington.svg.png'},
-  {abrv: 'WV', name: 'West Virginia', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Flag_of_West_Virginia.svg/23px-Flag_of_West_Virginia.svg.png'},
-  {abrv: 'WI', name: 'Wisconsin', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Flag_of_Wisconsin.svg/23px-Flag_of_Wisconsin.svg.png'},
-  {abrv: 'WY', name: 'Wyoming', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Flag_of_Wyoming.svg/22px-Flag_of_Wyoming.svg.png'},
-  {abrv: 'DC', name: 'District of Columbia', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_the_District_of_Columbia.svg/23px-Flag_of_the_District_of_Columbia.svg.png'},
-  {abrv: 'AS', name: 'American Samoa', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Flag_of_American_Samoa.svg/23px-Flag_of_American_Samoa.svg.png'},
-  {abrv: 'GU', name: 'Guam', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Flag_of_Guam.svg/23px-Flag_of_Guam.svg.png'},
-  {abrv: 'MP', name: 'Northern Mariana Islands', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Flag_of_the_Northern_Mariana_Islands.svg/23px-Flag_of_the_Northern_Mariana_Islands.svg.png'},
-  {abrv: 'PR', name: 'Puerto Rico', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Flag_of_Puerto_Rico.svg/23px-Flag_of_Puerto_Rico.svg.png'},
-  {abrv: 'VI', name: 'U.S. Virgin Islands', flag:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Flag_of_the_United_States_Virgin_Islands.svg/23px-Flag_of_the_United_States_Virgin_Islands.svg.png'},
+  { abrv: 'AL', name: 'Alabama', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Flag_of_Alabama.svg/23px-Flag_of_Alabama.svg.png' },
+  { abrv: 'AK', name: 'Alaska', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Flag_of_Alaska.svg/21px-Flag_of_Alaska.svg.png' },
+  { abrv: 'AR', name: 'Arkansas', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Flag_of_Arkansas.svg/23px-Flag_of_Arkansas.svg.png' },
+  { abrv: 'CA', name: 'California', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Flag_of_California.svg/23px-Flag_of_California.svg.png' },
+  { abrv: 'CO', name: 'Colorado', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Flag_of_Colorado.svg/23px-Flag_of_Colorado.svg.png' },
+  { abrv: 'CT', name: 'Connecticut', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Flag_of_Connecticut.svg/20px-Flag_of_Connecticut.svg.png' },
+  { abrv: 'DE', name: 'Delaware', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/Flag_of_Delaware.svg/23px-Flag_of_Delaware.svg.png' },
+  { abrv: 'FL', name: 'Florida', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Flag_of_Florida.svg/23px-Flag_of_Florida.svg.png' },
+  { abrv: 'GA', name: 'Georgia', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Flag_of_Georgia_%28U.S._state%29.svg/23px-Flag_of_Georgia_%28U.S._state%29.svg.png' },
+  { abrv: 'HI', name: 'Hawaii', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Flag_of_Hawaii.svg/23px-Flag_of_Hawaii.svg.png' },
+  { abrv: 'ID', name: 'Idaho', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Flag_of_Idaho.svg/19px-Flag_of_Idaho.svg.png' },
+  { abrv: 'IL', name: 'Illinois', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Flag_of_Illinois.svg/23px-Flag_of_Illinois.svg.png' },
+  { abrv: 'IN', name: 'Indiana', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Flag_of_Indiana.svg/23px-Flag_of_Indiana.svg.png' },
+  { abrv: 'IA', name: 'Iowa', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Flag_of_Iowa.svg/23px-Flag_of_Iowa.svg.png' },
+  { abrv: 'KS', name: 'Kansas', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Flag_of_Kansas.svg/23px-Flag_of_Kansas.svg.png' },
+  { abrv: 'KY', name: 'Kentucky', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Flag_of_Kentucky.svg/23px-Flag_of_Kentucky.svg.png' },
+  { abrv: 'LA', name: 'Louisiana', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Flag_of_Louisiana.svg/23px-Flag_of_Louisiana.svg.png' },
+  { abrv: 'ME', name: 'Maine', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Flag_of_Maine.svg/19px-Flag_of_Maine.svg.png' },
+  { abrv: 'MD', name: 'Maryland', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Flag_of_Maryland.svg/23px-Flag_of_Maryland.svg.png' },
+  { abrv: 'MA', name: 'Massachusetts', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Flag_of_Massachusetts.svg/23px-Flag_of_Massachusetts.svg.png' },
+  { abrv: 'MI', name: 'Michigan', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Flag_of_Michigan.svg/23px-Flag_of_Michigan.svg.png' },
+  { abrv: 'MN', name: 'Minnesota', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Flag_of_Minnesota.svg/23px-Flag_of_Minnesota.svg.png' },
+  { abrv: 'MS', name: 'Mississippi', flag: '' },
+  { abrv: 'MO', name: 'Missouri', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Flag_of_Missouri.svg/23px-Flag_of_Missouri.svg.png' },
+  { abrv: 'MT', name: 'Montana', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Flag_of_Montana.svg/23px-Flag_of_Montana.svg.png' },
+  { abrv: 'NE', name: 'Nebraska', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Flag_of_Nebraska.svg/23px-Flag_of_Nebraska.svg.png' },
+  { abrv: 'NV', name: 'Nevada', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Flag_of_Nevada.svg/23px-Flag_of_Nevada.svg.png' },
+  { abrv: 'NH', name: 'New Hampshire', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Flag_of_New_Hampshire.svg/23px-Flag_of_New_Hampshire.svg.png' },
+  { abrv: 'NJ', name: 'New Jersey', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Flag_of_New_Jersey.svg/23px-Flag_of_New_Jersey.svg.png' },
+  { abrv: 'NM', name: 'New Mexico', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Flag_of_New_Mexico.svg/23px-Flag_of_New_Mexico.svg.png' },
+  { abrv: 'NY', name: 'New York', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Flag_of_New_York.svg/23px-Flag_of_New_York.svg.png' },
+  { abrv: 'NC', name: 'North Carolina', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Flag_of_North_Carolina.svg/23px-Flag_of_North_Carolina.svg.png' },
+  { abrv: 'ND', name: 'North Dakota', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Flag_of_North_Dakota.svg/21px-Flag_of_North_Dakota.svg.png' },
+  { abrv: 'OH', name: 'Ohio', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Flag_of_Ohio.svg/25px-Flag_of_Ohio.svg.png' },
+  { abrv: 'OK', name: 'Oklahoma', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Flag_of_Oklahoma.svg/23px-Flag_of_Oklahoma.svg.png' },
+  { abrv: 'OR', name: 'Oregon', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Flag_of_Oregon.svg/23px-Flag_of_Oregon.svg.png' },
+  { abrv: 'PA', name: 'Pennsylvania', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Flag_of_Pennsylvania.svg/23px-Flag_of_Pennsylvania.svg.png' },
+  { abrv: 'RI', name: 'Rhode Island', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Flag_of_Rhode_Island.svg/19px-Flag_of_Rhode_Island.svg.png' },
+  { abrv: 'SC', name: 'South Carolina', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Flag_of_South_Carolina.svg/23px-Flag_of_South_Carolina.svg.png' },
+  { abrv: 'SD', name: 'South Dakota', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Flag_of_South_Dakota.svg/23px-Flag_of_South_Dakota.svg.png' },
+  { abrv: 'TN', name: 'Tennessee', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Flag_of_Tennessee.svg/23px-Flag_of_Tennessee.svg.png' },
+  { abrv: 'TX', name: 'Texas', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Flag_of_Texas.svg/23px-Flag_of_Texas.svg.png' },
+  { abrv: 'UT', name: 'Utah', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Flag_of_Utah.svg/23px-Flag_of_Utah.svg.png' },
+  { abrv: 'VT', name: 'Vermont', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Flag_of_Vermont.svg/23px-Flag_of_Vermont.svg.png' },
+  { abrv: 'VA', name: 'Virginia', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Flag_of_Virginia.svg/22px-Flag_of_Virginia.svg.png' },
+  { abrv: 'WA', name: 'Washington', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Flag_of_Washington.svg/23px-Flag_of_Washington.svg.png' },
+  { abrv: 'WV', name: 'West Virginia', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Flag_of_West_Virginia.svg/23px-Flag_of_West_Virginia.svg.png' },
+  { abrv: 'WI', name: 'Wisconsin', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Flag_of_Wisconsin.svg/23px-Flag_of_Wisconsin.svg.png' },
+  { abrv: 'WY', name: 'Wyoming', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Flag_of_Wyoming.svg/22px-Flag_of_Wyoming.svg.png' },
+  { abrv: 'DC', name: 'District of Columbia', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Flag_of_the_District_of_Columbia.svg/23px-Flag_of_the_District_of_Columbia.svg.png' },
+  { abrv: 'AS', name: 'American Samoa', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Flag_of_American_Samoa.svg/23px-Flag_of_American_Samoa.svg.png' },
+  { abrv: 'GU', name: 'Guam', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Flag_of_Guam.svg/23px-Flag_of_Guam.svg.png' },
+  { abrv: 'MP', name: 'Northern Mariana Islands', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Flag_of_the_Northern_Mariana_Islands.svg/23px-Flag_of_the_Northern_Mariana_Islands.svg.png' },
+  { abrv: 'PR', name: 'Puerto Rico', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Flag_of_Puerto_Rico.svg/23px-Flag_of_Puerto_Rico.svg.png' },
+  { abrv: 'VI', name: 'U.S. Virgin Islands', flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Flag_of_the_United_States_Virgin_Islands.svg/23px-Flag_of_the_United_States_Virgin_Islands.svg.png' },
 ];
 
 // App listener
