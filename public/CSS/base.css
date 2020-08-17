@@ -59,6 +59,11 @@ header {
     margin: 5px;
 }
 
+#incorrect_spelling{
+    text-align: center;
+}
+
+
 div > h2 {
     font-weight: bolder;
     padding: 3px;
