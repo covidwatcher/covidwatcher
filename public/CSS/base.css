@@ -3,23 +3,31 @@
 }
 
 body {
-    background-color: rgba(128, 128, 128, 0.349);
-}
-
-a:visited {
-    color: rgb(205, 175, 92);
+    background-color: #D0CCD0;
 }
 
 a {
-    color: rgb(25, 157, 167);
+    color: rgb(0, 38, 255);
+    font-family: 'Roboto';
+    text-decoration: none;
+    color: white;
+    text-shadow: 6px 3px 6px black;
 }
+
+
 
 h1 {
     text-align: center;
-    font-size: 38px;
-    font-family: 'Crimson Text', serif;
-    margin-bottom: 5px;
+    font-size: 36px;
+    font-family: 'Recursive';
+    margin-bottom: 40px;
     padding-top: 10px;
+    text-shadow: 6px 3px 6px white;
+    font-weight: bolder;
+}
+
+#aboutUs {
+    margin-bottom: 10px;
 }
 
 ul {
@@ -29,15 +37,18 @@ ul {
 
 li {
     display: inline;
-    padding: 10px;
+    padding: 5px;
+    background-color: rgba(108, 125, 142, 0.767);
+    border-radius: 10% 10% 10% 10%;
 }
 
 header {
-    color: #F4A261;
+    color: rgb(223, 107, 89);
     padding: 30px;
-    background-image: url(../images/virus_head.png);
+    background-image: url(../images/test1.jpg);
     background-size: 100%;
     border-radius: 0px 0px 10px 10px;
+    box-shadow: 0 8px 6px -6px #012E57;
 }
 
 ::placeholder{
@@ -110,4 +121,34 @@ h4 {
 
 .state-card {
     font-family: 'Roboto';
+}
+
+.tHead {
+    font-weight: bolder;
+    /* border: solid 1px black; */
+}
+
+#stateName {
+    font-size: 25px;
+}
+
+/* button {
+    width: 200px;
+} */
+
+button {
+    background:linear-gradient(to bottom, rgb(249, 193, 67) 5%, rgb(245, 137, 60) 100%);
+	background-color:#3158f5;
+	border-radius:28px;
+	border:1px solid #db9f28;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:17px;
+	padding:6px 20px;
+	text-decoration:none;
+    text-shadow:6px 3px 6px #d6922b;
+    box-shadow: 0 8px 12px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    margin-bottom: 5px;
 }
