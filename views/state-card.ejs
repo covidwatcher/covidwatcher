@@ -1,19 +1,18 @@
-<div id="state-container">
   <% states.forEach(state => { %>
   <div class="state-card">
     <table>
       <td colspan="2" style="text-align:center">
         <img src="<%= state.flag %>" alt="<%= state.stateName %>">
-        <h2><%= state.displayName %></h2>
+        <h2 id="stateName"><%= state.displayName %></h2>
       </td>
       </tr>
       <tr>
-        <th>Type</th>
-        <th>Number</th>
+        <th class="tHead">Type</th>
+        <th class="tHead">Number</th>
       </tr>
       <tr>
-        <td>Positive cases</td>
-        <td><%= state.positive %></td>
+        <td><hr>Positive cases</td>
+        <td><hr><%= state.positive %></td>
       </tr>
       <tr>
         <td>Negative cases</td>
@@ -73,4 +72,3 @@
     </table>
   </div>
   <% }) %>
-</div>
