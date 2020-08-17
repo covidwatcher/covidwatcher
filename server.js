@@ -32,6 +32,9 @@ client.on('error', err => console.log(err));
 // Route Definitions
 app.get('/', getSavedStates);
 app.get('/state', getStateData);
+app.get('/bad_search', (req, res) => {
+  res.render('bad_search.ejs');
+});
 app.get('/about', (req, res) => {
   res.render('about.ejs');
 });
@@ -43,50 +46,37 @@ app.use(errorHandler);
 
 function getStateData(request, response) {
 
-  // let state = request.query.state;
-  // if(request.query.state.length > 2){
-  //   let state = nameToAbrv(state, nameConvert).name;
-  let state = request.query.state;
-
-
-  // if(state.toString().length > 2){
-  //   state = nameToAbrv(state, nameConvert).name;
-  // } else state = request.query.state;
-
-  if (!state) {
+  if (!request.query.state) {
     let viewModelObject = { states: [] }
     response.render('state', viewModelObject)
     return
   }
 
-  if (request.query.state.length > 2) {
-    state = (arraySearch(state, stateArray).abrv).toLowerCase();
-  } else state = request.query.state;
-
+  let state = arraySearch(request.query.state, stateArray);
   console.log(state);
-  console.log((arraySearch(state, stateArray).abrv).toLowerCase());
 
-  const url = `https://api.covidtracking.com/v1/states/${state}/current.json`;
-  superagent.get(url)
-    .query({
-      format: 'json'
-    })
-    .then(stateDataResponse => {
-      const state = stateDataResponse.body;
-      const statesResult = [];
-      statesResult.push(new States(state))
-      return statesResult;
-    })
-    .then(results => {
-      // console.log(results);
-      let viewModelObject = { states: results };
-      response.render('state', viewModelObject)
-
-    })
-    .catch(err => {
-      console.log(err);
-      errorHandler(err, request, response);
-    });
+  if (state !== 'Incorrect spelling' && state) {
+    state = state.abrv.toLowerCase();
+    const url = `https://api.covidtracking.com/v1/states/${state}/current.json`;
+    superagent.get(url)
+      .query({
+        format: 'json'
+      })
+      .then(stateDataResponse => {
+        const state = stateDataResponse.body;
+        const statesResult = [];
+        statesResult.push(new States(state))
+        return statesResult;
+      })
+      .then(results => {
+        let viewModelObject = { states: results };
+        response.render('state', viewModelObject)
+      })
+      .catch(err => {
+        console.log(err);
+        errorHandler(err, request, response);
+      });
+  } else response.redirect('/bad_search')
 }
 
 function notFoundHandler(request, response) {
@@ -218,7 +208,7 @@ function arraySearch(state, array) {
     if (array[i].abrv.toLowerCase() === state.toLowerCase() || array[i].name.toLowerCase() === state.toLowerCase()) {
       return array[i];
     }
-  }
+  } return 'Incorrect spelling';
 }
 
 const stateArray = [
