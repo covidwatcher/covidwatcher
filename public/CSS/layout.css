@@ -6,29 +6,22 @@ main {
     padding: 5px;
     margin: 10px;
     border-radius: 3% 3% 3% 3%;
-    box-shadow: 3px 3px 5px rgb(102, 56, 26);
+    box-shadow: 12px 0 15px -4px rgba(0, 0, 0, 0.205), -12px 0 8px -4px rgba(0, 0, 0, 0.123);
     background-color: whitesmoke;
     font-family: 'Recursive', sans-serif;
 }
 
 #state-container {
-    display: grid;
-    grid-template-columns: 50% 50%;
-}
-
-.state-card:nth-of-type(odd) {
-    grid-column: 1;
-}
-
-.state-card:nth-of-type(even) {
-    grid-column: 2;
+    margin: 5px;
 }
 
 .state-card {
     border-radius: 3% 3% 3% 3%;
     margin: 3px;
-    background-color: #f4a36188;
-    box-shadow: 3px 3px 5px #66381a;
+    background-color: rgb(220, 199, 176) ;
+    box-shadow: 12px 0 15px -4px rgba(0, 0, 0, 0.205), -12px 0 8px -4px rgba(0, 0, 0, 0.123);
+    margin-top: 15px;
+    max-width: 100% !important;
 }
 
 table {
@@ -38,6 +31,7 @@ table {
 
 td{
     padding: 5px;
+    /* text-align: center; */
 }
 
 .container {
@@ -45,8 +39,9 @@ td{
     margin: 10px;
     border-radius: 3% 3% 3% 3%;
     box-shadow: 3px 3px 5px rgb(102, 56, 26);
-    background-color: whitesmoke;
+    background-color: rgb(220, 199, 176);
     font-family: 'Recursive', sans-serif;
+    box-shadow: 12px 0 15px -4px rgba(0, 0, 0, 0.205), -12px 0 8px -4px rgba(0, 0, 0, 0.123)
 }
 
 .image {
@@ -55,6 +50,8 @@ td{
     margin-left: auto;
     margin-right: auto;
     width: 50%;
+    border: 1px solid black;
+    border-radius: 3% 3% 3% 3%;
 }
 
 @media (min-width: 800px){
