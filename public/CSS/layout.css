@@ -59,6 +59,11 @@ td{
         max-width: 750px;
         margin: auto
     }
+
+    header {
+        max-width: 750px;
+    }
+
     main {
         min-height: 670px;
     }
