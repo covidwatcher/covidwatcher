@@ -102,48 +102,48 @@ function getSavedStates(request, response) {
 
         if (timeOnRow > fiveMinutesAgo) {
           return row
-        }
-        // console.log('Row is out of date: ', row);
-        let state = row.stateName;
-        const url = `https://api.covidtracking.com/v1/states/${state}/current.json`;
-        return superagent.get(url)
-          .then(response => {
-            return new States(response.body);
-          })
-          .then(state => {
-            const SQL = `
+        } else {
+          let state = row.stateName;
+          const url = `https://api.covidtracking.com/v1/states/${state}/current.json`;
+          return superagent.get(url)
+
+            .then(response => {
+              return new States(response.body);
+            })
+            .then(state => {
+              const SQL = `
             UPDATE userstates
             SET "updatedTime" = $2, positive = $3,  negative = $4, "hospitalizedCurrently" = $5, recovered = $6, death = $7, "totalTest" = $8, "positiveTests" = $9, "negativeTests" = $10 
             WHERE "stateName" = $1
             `;
-            let values = [state.stateName, state.date, state.positive, state.negative, state.hospitalizedCurrently, state.recovered, state.death, state.totalTest, state.positiveTests, state.negativeTests];
-            return client.query(SQL, values)
-              .then(results => {
-                console.log(results);
-                const SQL = `
+              let values = [state.stateName, state.date, state.positive, state.negative, state.hospitalizedCurrently, state.recovered, state.death, state.totalTest, state.positiveTests, state.negativeTests];
+              return client.query(SQL, values)
+                .then(results => {
+                  console.log(results);
+                  const SQL = `
                 SELECT *
                 FROM userstates
                 WHERE "stateName" = $1
                 `;
-                let values = [state.stateName];
-                return client.query(SQL, values)
-                  .then(results => {
-                    return results.rows[0];
-                  })
-                  .then(state => {
-                    const { runChart } = require('chart.js');
-                    runChart(state);
-                  })
-              })
-          })
-          .catch(err => {
-            console.log(err);
-            return row;
-          })
+                  let values = [state.stateName];
+                  return client.query(SQL, values)
+                    .then(results => {
+                      return results.rows[0];
+                    })
+                    // .then(state => {
+                    //   const { runChart } = require('chart.js');
+                    //   runChart(state);
+                    // })
+                })
+            })
+            .catch(err => {
+              console.log(err);
+              return row;
+            })
+        }
       }))
     })
     .then(states => {
-      // console.log(states);
       let viewModelObject = {
         states,
       }
@@ -189,6 +189,7 @@ function deleteState(request, response) {
 
 function States(state) {
   const altText = 'Not Reported';
+  this.displayDate = dateTime(new Date()) || 'Just now';
   this.date = new Date();
   this.stateName = state.state;
   this.positive = state.positive || altText;
@@ -209,6 +210,16 @@ function arraySearch(state, array) {
       return array[i];
     }
   } return 'Incorrect spelling';
+}
+
+function dateTime(today) {
+  return (today.getMonth() + 1)
+    + '/'
+    + today.getDate()
+    + ' at '
+    + ('0' + today.getHours()).slice(-2) + ':'
+    + ('0' + today.getMinutes()).slice(-2) + ':'
+    + ('0' + today.getSeconds()).slice(-2);
 }
 
 const stateArray = [
